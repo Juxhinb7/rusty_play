@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2021"
 exclude = ["src/main.rs"]
 
+description = "A library for creating 2d games in Rust with sdl2."
+repository = "https://github.com/Juxhinb7/rusty_play"
+license = "MIT"
+
 [dependencies]
 sdl2 = { version = "0.38.0", default-features = false, features = ["image", "ttf"] }
 memory-stats = "1.2"
