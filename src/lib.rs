@@ -1,3 +1,4 @@
+pub use sdl2;
 pub mod ecs;
 pub mod warehouse;
 pub mod bootstrap;
