@@ -1,9 +1,9 @@
-use crate::ecs::component::{animation::Animation, health::Health, transform::Transform, weapon::Weapon};
+use crate::ecs::component::{animation_component::AnimationComponent, health_component::HealthComponent, transform_component::TransformComponent, weapon_component::WeaponComponent};
 
-pub mod animation;
-pub mod transform;
-pub mod health;
-pub mod weapon;
+pub mod animation_component;
+pub mod transform_component;
+pub mod health_component;
+pub mod weapon_component;
 
 #[derive(PartialEq, PartialOrd, Ord, Eq)]
 pub enum ComponentKind {
@@ -14,32 +14,32 @@ pub enum ComponentKind {
 }
 
 pub enum Component {
-    Transform(Transform),
-    Animation(Animation),
-    Health(Health),
-    Weapon(Weapon),
+    Transform(TransformComponent),
+    Animation(AnimationComponent),
+    Health(HealthComponent),
+    Weapon(WeaponComponent),
 }
 
-impl From<Transform> for Component {
-    fn from(value: Transform) -> Self {
+impl From<TransformComponent> for Component {
+    fn from(value: TransformComponent) -> Self {
         Component::Transform(value)
     }
 }
 
-impl From<Animation> for Component {
-    fn from(value: Animation) -> Self {
+impl From<AnimationComponent> for Component {
+    fn from(value: AnimationComponent) -> Self {
         Component::Animation(value)
     }
 }
 
-impl From<Health> for Component {
-    fn from(value: Health) -> Self {
+impl From<HealthComponent> for Component {
+    fn from(value: HealthComponent) -> Self {
         Component::Health(value)
     }
 }
 
-impl From<Weapon> for Component {
-    fn from(value: Weapon) -> Self {
+impl From<WeaponComponent> for Component {
+    fn from(value: WeaponComponent) -> Self {
         Component::Weapon(value)
     }
 }

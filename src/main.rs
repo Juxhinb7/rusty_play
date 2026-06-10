@@ -1,6 +1,6 @@
 use std::rc::Rc;
 
-use rusty_play::{bootstrap::{GameBuilder, RustyErrorResult}, contexts::{Context, setup::Setup}, ecs::{component::{Component, ComponentKind, animation::Animation, health::Health, transform::Transform}, entity::EntityKind}, math::{Position, Velocity}, rendering::draw_texture, warehouse::{ResourceManager, resources::{ttf::TTF}}};
+use rusty_play::{bootstrap::{GameBuilder, RustyErrorResult}, contexts::{Context, setup::Setup}, ecs::{component::{Component, ComponentKind, animation_component::AnimationComponent, health_component::HealthComponent, transform_component::TransformComponent}, entity::EntityKind}, math::{Position, Velocity}, rendering::draw_texture, warehouse::{ResourceManager, resources::{ttf::TTFResource}}};
 use sdl2::{event::Event, image::LoadTexture, keyboard::Keycode};
 
 fn start(ctx: &mut Context<Setup>) -> RustyErrorResult<()> {
@@ -12,7 +12,7 @@ fn start(ctx: &mut Context<Setup>) -> RustyErrorResult<()> {
     let mut resource_manager = ResourceManager::new();
     resource_manager
         .add_resource(
-            TTF {
+            TTFResource {
                 sdl2_ttf_context: sdl2::ttf::init().unwrap()
             }.into()
         );
@@ -20,7 +20,7 @@ fn start(ctx: &mut Context<Setup>) -> RustyErrorResult<()> {
 
     player.borrow_mut()
         .add_component(
-            Transform {
+            TransformComponent {
                 position: Position { x: 550, y: 500 },
                 velocity: Velocity { x: 20, y: 20 },
                 initial_position: Position { x: 550, y: 650 },
@@ -28,7 +28,7 @@ fn start(ctx: &mut Context<Setup>) -> RustyErrorResult<()> {
             }.into()
         )
         .add_component(
-            Health {
+            HealthComponent {
                 max: 100,
                 current: 100
             }.into()
@@ -75,7 +75,7 @@ fn update(ctx: &mut Context<Setup>) -> RustyErrorResult<()> {
         Ok(())
     };
 
-    let render = |ctx: &mut Context<Setup>, _: &mut Vec<Animation>| -> RustyErrorResult<()> {
+    let render = |ctx: &mut Context<Setup>, _: &mut Vec<AnimationComponent>| -> RustyErrorResult<()> {
         ctx.inner.canvas.clear();
 
         let background_texture = ctx.inner.world
@@ -112,7 +112,7 @@ fn update(ctx: &mut Context<Setup>) -> RustyErrorResult<()> {
 
     handle_events(ctx)?;
 
-    render(ctx, &mut vec![Animation::new()])?;
+    render(ctx, &mut vec![AnimationComponent::new()])?;
 
     let resource_manager = ctx.inner.world.get_resource_manager().as_ref().ok_or("ResourceManager not initialized")?;
 

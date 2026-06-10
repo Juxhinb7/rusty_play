@@ -1,4 +1,4 @@
-use crate::warehouse::resources::ttf::TTF;
+use crate::warehouse::resources::ttf::TTFResource;
 
 pub mod ttf;
 
@@ -8,11 +8,11 @@ pub enum ResourceKind {
 }
 
 pub enum Resource {
-    TTF(TTF)
+    TTF(TTFResource)
 }
 
-impl From<TTF> for Resource {
-    fn from(value: TTF) -> Self {
+impl From<TTFResource> for Resource {
+    fn from(value: TTFResource) -> Self {
         Resource::TTF(value)
     }
 }
