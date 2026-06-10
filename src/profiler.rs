@@ -16,7 +16,7 @@ pub struct Profiler {
 impl Default for Profiler {
     fn default() -> Self {
         Self { 
-            font: "src/bpg-supersquare-webfont.ttf",
+            font: "",
             point_size: 12,
             fps_config: FPSConfig { 
                 fps: Default::default(), 
