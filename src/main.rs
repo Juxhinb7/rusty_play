@@ -116,7 +116,7 @@ fn update(ctx: &mut Context<Setup>) -> RustyErrorResult<()> {
 
     let resource_manager = ctx.inner.world.get_resource_manager().as_ref().ok_or("ResourceManager not initialized")?;
 
-    ctx.inner.profiler.display_diagnostics(&ctx.inner.sdl2_context, resource_manager, &mut ctx.inner.canvas, &ctx.inner.texture_creator)?;
+    ctx.inner.profiler.display_diagnostics("src/bpg-supersquare-webfont.ttf", &ctx.inner.sdl2_context, resource_manager, &mut ctx.inner.canvas, &ctx.inner.texture_creator)?;
 
 
 

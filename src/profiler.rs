@@ -8,7 +8,6 @@ pub struct FPSConfig {
 }
 
 pub struct Profiler {
-    pub font: &'static str,
     pub point_size: u16,
     pub fps_config: FPSConfig
 }
@@ -16,7 +15,6 @@ pub struct Profiler {
 impl Default for Profiler {
     fn default() -> Self {
         Self { 
-            font: "",
             point_size: 12,
             fps_config: FPSConfig { 
                 fps: Default::default(), 
@@ -27,19 +25,19 @@ impl Default for Profiler {
 
 impl Profiler {
 
-    pub fn display_diagnostics(&self, sdl2_context: &Sdl, resource_manager: &ResourceManager, canvas: &mut Canvas<sdl2::video::Window>, texture_creator: &TextureCreator<WindowContext>) -> RustyErrorResult<()> {
-        self.get_fps(resource_manager, canvas, texture_creator)?;
-        self.get_physical_memory_usage(resource_manager, canvas, texture_creator)?;
-        self.get_current_platform(resource_manager, canvas, texture_creator)?;
-        self.get_current_video_driver(sdl2_context, resource_manager, canvas, texture_creator)?;
+    pub fn display_diagnostics(&self, font: &'static str, sdl2_context: &Sdl, resource_manager: &ResourceManager, canvas: &mut Canvas<sdl2::video::Window>, texture_creator: &TextureCreator<WindowContext>) -> RustyErrorResult<()> {
+        self.get_fps(font, resource_manager, canvas, texture_creator)?;
+        self.get_physical_memory_usage(font, resource_manager, canvas, texture_creator)?;
+        self.get_current_platform(font, resource_manager, canvas, texture_creator)?;
+        self.get_current_video_driver(font, sdl2_context, resource_manager, canvas, texture_creator)?;
 
         Ok(())
     }
     
-    fn get_fps(&self, resource_manager: &ResourceManager, canvas: &mut Canvas<sdl2::video::Window>, texture_creator: &TextureCreator<WindowContext>) -> RustyErrorResult<()> {
+    fn get_fps(&self, font: &'static str, resource_manager: &ResourceManager, canvas: &mut Canvas<sdl2::video::Window>, texture_creator: &TextureCreator<WindowContext>) -> RustyErrorResult<()> {
 
         if let Some(Resource::TTF(ttf)) = resource_manager.get_resource(ResourceKind::TTF) {
-            let font = ttf.sdl2_ttf_context.load_font(self.font, self.point_size)?;
+            let font = ttf.sdl2_ttf_context.load_font(font, self.point_size)?;
             self.configure_text(canvas, texture_creator, &font, &format!("Performance: {} FPS", self.fps_config.fps), Position { x: 0, y: 5 })?;
             return Ok(());
         }
@@ -47,11 +45,11 @@ impl Profiler {
         Err(Box::new(RustyError("Error getting fps metrics".into())))
     }
 
-    fn get_physical_memory_usage(&self, resource_manager: &ResourceManager, canvas: &mut Canvas<sdl2::video::Window>, texture_creator: &TextureCreator<WindowContext>) -> RustyErrorResult<()> {
+    fn get_physical_memory_usage(&self, font: &'static str, resource_manager: &ResourceManager, canvas: &mut Canvas<sdl2::video::Window>, texture_creator: &TextureCreator<WindowContext>) -> RustyErrorResult<()> {
         
         if let Some(usage) = memory_stats() {
             if let Some(Resource::TTF(ttf)) = resource_manager.get_resource(ResourceKind::TTF) {
-                let font = ttf.sdl2_ttf_context.load_font(self.font, self.point_size)?;
+                let font = ttf.sdl2_ttf_context.load_font(font, self.point_size)?;
                 self.configure_text(canvas, texture_creator, &font, &format!("Physical memory usage: {} MiB", usage.physical_mem / 1024 / 1024), Position { x: 0, y: 20})?;
                 return Ok(());
             }
@@ -62,9 +60,9 @@ impl Profiler {
 
     }
 
-    pub fn get_current_platform(&self, resource_manager: &ResourceManager, canvas: &mut Canvas<sdl2::video::Window>, texture_creator: &TextureCreator<WindowContext>) -> RustyErrorResult<()> {
+    pub fn get_current_platform(&self, font: &'static str, resource_manager: &ResourceManager, canvas: &mut Canvas<sdl2::video::Window>, texture_creator: &TextureCreator<WindowContext>) -> RustyErrorResult<()> {
         if let Some(Resource::TTF(ttf)) = resource_manager.get_resource(ResourceKind::TTF) {
-            let font = ttf.sdl2_ttf_context.load_font(self.font, self.point_size)?;
+            let font = ttf.sdl2_ttf_context.load_font(font, self.point_size)?;
             self.configure_text(canvas, texture_creator, &font, &format!("Platform: {}", sdl2::get_platform()), Position { x: 0, y: 40 })?;
             return Ok(())
 
@@ -72,12 +70,12 @@ impl Profiler {
         Err(Box::new(RustyError("Error rendering text for the platform.".into())))
     }
 
-    pub fn get_current_video_driver(&self, sdl2_context: &Sdl, resource_manager: &ResourceManager, canvas: &mut Canvas<sdl2::video::Window>, texture_creator: &TextureCreator<WindowContext>) -> RustyErrorResult<()> {
+    pub fn get_current_video_driver(&self, font: &'static str, sdl2_context: &Sdl, resource_manager: &ResourceManager, canvas: &mut Canvas<sdl2::video::Window>, texture_creator: &TextureCreator<WindowContext>) -> RustyErrorResult<()> {
         let video = sdl2_context.video()?;
         
         
         if let Some(Resource::TTF(ttf)) = resource_manager.get_resource(ResourceKind::TTF) {
-            let font = ttf.sdl2_ttf_context.load_font(self.font, self.point_size)?;
+            let font = ttf.sdl2_ttf_context.load_font(font, self.point_size)?;
             self.configure_text(canvas, texture_creator, &font, &format!("Current video driver: {}", video.current_video_driver()), Position { x: 0, y: 60 })?;
             return Ok(())
         } 
